@@ -10,6 +10,7 @@ import {
 } from "@ionic/react";
 
 import { addEntry } from "../utils/filesystemService";
+import { analyzeEntry } from "../utils/openaiService";
 
 const JournalEntryForm: React.FC = () => {
 	const [title, setTitle] = useState("");
@@ -23,8 +24,9 @@ const JournalEntryForm: React.FC = () => {
 			setShowAlert(true);
 			return;
 		}
+		const analysis = await analyzeEntry(content);
 
-		await addEntry(title, content);
+		await addEntry(title.trim(), content.trim(), entryType);
 
 		setTitle("");
 		setContent("");

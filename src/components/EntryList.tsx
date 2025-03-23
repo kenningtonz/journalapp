@@ -10,6 +10,7 @@ import {
 	IonTitle,
 	IonContent,
 	useIonRouter,
+	useIonViewWillEnter,
 } from "@ionic/react";
 import { getEntries } from "../utils/filesystemService";
 
@@ -24,13 +25,15 @@ const EntriesList: React.FC = () => {
 	const [entries, setEntries] = useState<Entry[]>([]);
 	const router = useIonRouter();
 
-	useEffect(() => {
-		const loadEntries = async () => {
-			const data = await getEntries();
-			setEntries(data);
-		};
+	const loadEntries = async () => {
+		const data = await getEntries();
+		setEntries(data);
+	};
+
+	// Reload when page becomes active!
+	useIonViewWillEnter(() => {
 		loadEntries();
-	}, []);
+	});
 
 	return (
 		<IonPage>

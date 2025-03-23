@@ -54,14 +54,13 @@ setupIonicReact();
 const App: React.FC = () => (
 	<IonApp>
 		<IonReactRouter>
-			<Route
-				exact
-				path='/entry/:id'
-				component={EntryDetailPage}
-			/>
-
 			<IonTabs>
 				<IonRouterOutlet>
+					<Route
+						exact
+						path='/entry/:id'
+						component={EntryDetailPage}
+					/>
 					<Route
 						exact
 						path='/tab1'

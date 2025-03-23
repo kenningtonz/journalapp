@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	IonPage,
 	IonHeader,
@@ -7,15 +7,37 @@ import {
 	IonContent,
 	IonButton,
 	IonAlert,
+	IonItem,
+	IonLabel,
+	IonToggle,
 } from "@ionic/react";
-import { exportEntries, importEntries } from "../utils/filesystemService";
+import {
+	getAnalysisSetting,
+	setAnalysisSetting,
+} from "../utils/filesystemService";
+import { exportEntries, importEntries } from "../utils/import_export";
+import { Preferences } from "@capacitor/preferences";
 
 const SettingsPage: React.FC = () => {
 	const [showSuccess, setShowSuccess] = useState(false);
+	const [analysisEnabled, setAnalysisEnabled] = useState(true);
+
+	useEffect(() => {
+		const loadSettings = async () => {
+			const enabled = await getAnalysisSetting();
+			setAnalysisEnabled(enabled);
+		};
+		loadSettings();
+	}, []);
 
 	const handleImport = async () => {
 		const success = await importEntries();
 		if (success) setShowSuccess(true);
+	};
+
+	const toggleAnalysis = async (value: boolean) => {
+		setAnalysisEnabled(value);
+		await setAnalysisSetting(value);
 	};
 
 	return (
@@ -26,6 +48,13 @@ const SettingsPage: React.FC = () => {
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className='ion-padding'>
+				<IonItem>
+					<IonLabel>Enable AI Analysis</IonLabel>
+					<IonToggle
+						checked={analysisEnabled}
+						onIonChange={(e) => toggleAnalysis(e.detail.checked)}
+					/>
+				</IonItem>
 				<IonButton
 					expand='block'
 					onClick={exportEntries}

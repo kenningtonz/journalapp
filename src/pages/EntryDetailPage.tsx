@@ -11,6 +11,8 @@ import {
 	IonTextarea,
 	IonButton,
 	useIonRouter,
+	IonButtons,
+	IonBackButton,
 } from "@ionic/react";
 import {
 	getEntries,
@@ -39,6 +41,13 @@ const EntryDetailPage: React.FC = () => {
 		load();
 	}, [id]);
 
+	// const reanalyze = async (mode: "summary" | "mood" | "advice") => {
+	// 	const result = await analyzeEntry(entry.content, mode);
+	// 	const updatedAnalysis = { ...entry.analysis, [mode]: result };
+	// 	await updateEntry(entry.id, { analysis: updatedAnalysis });
+	// 	setEntry({ ...entry, analysis: updatedAnalysis });
+	// };
+
 	const handleUpdate = async () => {
 		await updateEntry(id, { title, content });
 		router.goBack();
@@ -55,7 +64,10 @@ const EntryDetailPage: React.FC = () => {
 		<IonPage>
 			<IonHeader>
 				<IonToolbar>
-					<IonTitle>Edit Entry</IonTitle>
+					<IonButtons slot='start'>
+						<IonBackButton defaultHref='/' />
+					</IonButtons>
+					<IonTitle>Edit Entry - {entry.timestamp}</IonTitle>
 				</IonToolbar>
 			</IonHeader>
 			<IonContent className='ion-padding'>
@@ -64,6 +76,7 @@ const EntryDetailPage: React.FC = () => {
 					<IonInput
 						value={title}
 						onIonChange={(e) => setTitle(e.detail.value!)}
+						required
 					/>
 				</IonItem>
 				<IonItem>
@@ -71,8 +84,50 @@ const EntryDetailPage: React.FC = () => {
 					<IonTextarea
 						value={content}
 						onIonChange={(e) => setContent(e.detail.value!)}
+						required
 					/>
 				</IonItem>
+				<IonItem>
+					<IonLabel position='stacked'>AI Analysis</IonLabel>
+					<p>{entry.analysis || "No analysis yet."}</p>
+				</IonItem>
+				<IonItem>
+					<IonLabel position='stacked'>
+						AI Analysis (Summary)
+					</IonLabel>
+					<p>{entry.analysis?.summary || "No analysis yet."}</p>
+				</IonItem>
+				<IonItem>
+					<IonLabel position='stacked'>AI Mood Detection</IonLabel>
+					<p>{entry.analysis?.mood || "No analysis yet."}</p>
+				</IonItem>
+				<IonItem>
+					<IonLabel position='stacked'>AI Advice</IonLabel>
+					<p>{entry.analysis?.advice || "No analysis yet."}</p>
+				</IonItem>
+
+				{/* <IonButton
+					expand='block'
+					className='ion-margin-top'
+					onClick={() => reanalyze("summary")}
+				>
+					Re-analyze Summary
+				</IonButton>
+				<IonButton
+					expand='block'
+					className='ion-margin-top'
+					onClick={() => reanalyze("mood")}
+				>
+					Re-analyze Mood
+				</IonButton>
+				<IonButton
+					expand='block'
+					className='ion-margin-top'
+					onClick={() => reanalyze("advice")}
+				>
+					Re-analyze Advice
+				</IonButton> */}
+
 				<IonButton
 					expand='block'
 					className='ion-margin-top'
